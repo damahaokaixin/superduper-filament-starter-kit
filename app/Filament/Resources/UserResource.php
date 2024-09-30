@@ -34,6 +34,10 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+
+    protected static ?string $modelLabel = '用户';
+    protected static ?string $pluralModelLabel = '用户';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -41,6 +45,7 @@ class UserResource extends Resource
                 Forms\Components\Group::make()
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('media')
+                            ->label('头像')
                             ->hiddenLabel()
                             ->avatar()
                             ->collection('avatars')
@@ -49,7 +54,7 @@ class UserResource extends Resource
 
                         Forms\Components\Actions::make([
                             Action::make('resend_verification')
-                                ->label(__('resource.user.actions.resend_verification'))
+                                ->label('重新发送验证邮件')
                                 ->color('info')
                                 ->action(fn(MailSettings $settings, Model $record) => static::doResendEmailVerification($settings, $record)),
                         ])
@@ -60,12 +65,14 @@ class UserResource extends Resource
                         Forms\Components\Section::make()
                             ->schema([
                                 Forms\Components\TextInput::make('password')
+                                    ->label('密码')
                                     ->password()
                                     ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
                                     ->dehydrated(fn(?string $state): bool => filled($state))
                                     ->revealable()
                                     ->required(),
                                 Forms\Components\TextInput::make('passwordConfirmation')
+                                    ->label('确认密码')
                                     ->password()
                                     ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
                                     ->dehydrated(fn(?string $state): bool => filled($state))
@@ -79,13 +86,13 @@ class UserResource extends Resource
                         Forms\Components\Section::make()
                             ->schema([
                                 Forms\Components\Placeholder::make('email_verified_at')
-                                    ->label(__('resource.general.email_verified_at'))
+                                    ->label('邮箱验证时间')
                                     ->content(fn(User $record): ?string => new HtmlString("$record->email_verified_at")),
                                 Forms\Components\Placeholder::make('created_at')
-                                    ->label(__('resource.general.created_at'))
+                                    ->label('创建时间')
                                     ->content(fn(User $record): ?string => $record->created_at?->diffForHumans()),
                                 Forms\Components\Placeholder::make('updated_at')
-                                    ->label(__('resource.general.updated_at'))
+                                    ->label('更新时间')
                                     ->content(fn(User $record): ?string => $record->updated_at?->diffForHumans()),
                             ])
                             ->compact()
@@ -95,10 +102,11 @@ class UserResource extends Resource
 
                 Forms\Components\Tabs::make()
                     ->schema([
-                        Forms\Components\Tabs\Tab::make('Details')
+                        Forms\Components\Tabs\Tab::make('详细信息')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 Forms\Components\TextInput::make('username')
+                                    ->label('用户名')
                                     ->required()
                                     ->maxLength(255)
                                     ->live()
@@ -110,6 +118,7 @@ class UserResource extends Resource
                                     }),
 
                                 Forms\Components\TextInput::make('email')
+                                    ->label('电子邮箱')
                                     ->email()
                                     ->required()
                                     ->maxLength(255)
@@ -121,19 +130,22 @@ class UserResource extends Resource
                                     }),
 
                                 Forms\Components\TextInput::make('firstname')
+                                    ->label('姓')
                                     ->required()
                                     ->maxLength(255),
 
                                 Forms\Components\TextInput::make('lastname')
+                                    ->label('名')
                                     ->required()
                                     ->maxLength(255),
                             ])
                             ->columns(2),
 
-                        Forms\Components\Tabs\Tab::make('Roles')
+                        Forms\Components\Tabs\Tab::make('角色')
                             ->icon('fluentui-shield-task-48')
                             ->schema([
                                 Select::make('roles')
+                                    ->label('角色')
                                     ->hiddenLabel()
                                     ->relationship('roles', 'name')
                                     ->getOptionLabelFromRecordUsing(fn(Model $record) => Str::headline($record->name))
@@ -156,26 +168,26 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('media')->label('Avatar')
+                SpatieMediaLibraryImageColumn::make('media')->label('头像')
                     ->collection('avatars')
                     ->wrap(),
-                Tables\Columns\TextColumn::make('username')->label('Username')
+                Tables\Columns\TextColumn::make('username')->label('用户名')
                     ->description(fn(Model $record) => $record->firstname . ' ' . $record->lastname)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('roles.name')->label('Role')
+                Tables\Columns\TextColumn::make('roles.name')->label('角色')
                     ->formatStateUsing(fn($state): string => Str::headline($state))
                     ->colors(['info'])
                     ->badge(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('email')->label('电子邮箱')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')->label('Verified at')
+                Tables\Columns\TextColumn::make('email_verified_at')->label('验证时间')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')->label('创建时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')->label('更新时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -229,7 +241,7 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __("menu.nav_group.access");
+        return "访问控制";
     }
 
     public static function doResendEmailVerification($settings = null, $user): void

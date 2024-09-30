@@ -24,6 +24,10 @@ class BannerResource extends Resource
     protected static ?int $navigationSort = -1;
     protected static ?string $navigationIcon = 'fluentui-image-shadow-24';
 
+    // 添加中文资源名称
+    protected static ?string $modelLabel = '横幅';
+    protected static ?string $pluralModelLabel = '横幅';
+
     protected static function getLastSortValue(): int
     {
         return Banner::max('sort') ?? 0;
@@ -33,36 +37,37 @@ class BannerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('Banner Details')
+                Forms\Components\Tabs::make('横幅详情')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('General')
+                            ->label('基础')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Forms\Components\Section::make('Main Details')
-                                    ->description('Fill out the main details of the banner')
+                                Forms\Components\Section::make('主要详情')
+                                    ->description('填写横幅的主要详情')
                                     ->icon('heroicon-o-clipboard')
                                     ->schema([
                                         Forms\Components\Select::make('banner_category_id')
-                                            ->label('Category')
+                                            ->label('分类')
                                             ->relationship('category', 'name')
                                             ->searchable()
                                             ->required(),
                                         Forms\Components\Select::make('is_visible')
-                                            ->label('Is Visible')
+                                            ->label('是否可见')
                                             ->default(1)
                                             ->options([
-                                                0 => "No",
-                                                1 => "Yes",
+                                                0 => "否",
+                                                1 => "是",
                                             ])
                                             ->native(false)
                                             ->required(),
                                         Forms\Components\TextInput::make('title')
-                                            ->label('Title')
+                                            ->label('标题')
                                             ->maxLength(255)
                                             ->columnSpan(2),
                                         Forms\Components\MarkdownEditor::make('description')
-                                            ->label('Description')
-                                            ->helperText('Provide a description for the banner')
+                                            ->label('描述')
+                                            ->helperText('提供横幅的描述')
                                             ->maxLength(500)
                                             ->columnSpanFull(),
                                     ])
@@ -70,12 +75,14 @@ class BannerResource extends Resource
                                     ->columns(2),
                             ]),
                         Forms\Components\Tabs\Tab::make('Images')
+                            ->label('图片')
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                Forms\Components\Section::make('Image')
-                                    ->description('Upload banner images here')
+                                Forms\Components\Section::make('图片')
+                                    ->description('在此上传横幅图片')
                                     ->schema([
                                         MediaManagerInput::make('images')
+                                            ->label('图片')
                                             ->hiddenLabel()
                                             ->schema([
                                             ])
@@ -85,46 +92,48 @@ class BannerResource extends Resource
                                     ->compact(),
                             ]),
                         Forms\Components\Tabs\Tab::make('Scheduling')
+                            ->label('计划')
                             ->icon('heroicon-o-calendar')
                             ->schema([
-                                Forms\Components\Section::make('Schedule')
-                                    ->description('Set the scheduling details for the banner')
+                                Forms\Components\Section::make('计划')
+                                    ->description('设置横幅的计划详情')
                                     ->schema([
                                         Forms\Components\DateTimePicker::make('start_date')
-                                            ->label('Start Date')
-                                            ->helperText('Select the start date and time'),
+                                            ->label('开始日期')
+                                            ->helperText('选择开始日期和时间'),
                                         Forms\Components\DateTimePicker::make('end_date')
-                                            ->label('End Date')
-                                            ->helperText('Select the end date and time'),
+                                            ->label('结束日期')
+                                            ->helperText('选择结束日期和时间'),
                                     ])
                                     ->compact()
                                     ->columns(2),
                             ]),
                         Forms\Components\Tabs\Tab::make('Additional Settings')
+                            ->label('附加设置')
                             ->icon('heroicon-o-cog')
                             ->schema([
-                                Forms\Components\Section::make('Settings')
-                                    ->description('Additional settings for the banner')
+                                Forms\Components\Section::make('设置')
+                                    ->description('横幅的附加设置')
                                     ->schema([
                                         Forms\Components\TextInput::make('sort')
-                                            ->label('Sort Order')
-                                            ->helperText('Set the sort order of the banner')
+                                            ->label('排序顺序')
+                                            ->helperText('设置横幅的排序顺序')
                                             ->required()
                                             ->numeric()
                                             ->default(static::getLastSortValue() + 1),
                                         Forms\Components\TextInput::make('click_url')
-                                            ->label('Click URL')
-                                            ->helperText('Enter the URL to navigate to when the banner is clicked')
+                                            ->label('点击链接')
+                                            ->helperText('输入点击横幅时导航到的URL')
                                             ->default('#')
                                             ->maxLength(255),
                                         Forms\Components\Select::make('click_url_target')
-                                            ->label('Click URL Target')
-                                            ->helperText('Select how the URL should be opened')
+                                            ->label('链接打开方式')
+                                            ->helperText('选择如何打开URL')
                                             ->options([
-                                                '_blank' => 'New Tab',
-                                                '_self' => 'Current Tab',
-                                                '_parent' => 'Parent Frame',
-                                                '_top' => 'Full Body of the Window'
+                                                '_blank' => '新标签页',
+                                                '_self' => '当前标签页',
+                                                '_parent' => '父框架',
+                                                '_top' => '整个窗口'
                                             ])
                                             ->native(false),
                                     ])
@@ -139,59 +148,70 @@ class BannerResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('media')->label('Images')
+                SpatieMediaLibraryImageColumn::make('media')->label('图片')
                     ->collection('images')
                     ->wrap(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('标题')
                     ->description(fn(Model $record): string => strip_tags((new CommonMarkConverter())->convert($record->description)->getContent()))
                     ->lineClamp(2)
                     ->wrap()
                     ->searchable()
                     ->extraAttributes(['class' => '!w-96']),
                 Tables\Columns\TextColumn::make('category.name')
+                    ->label('分类')
                     ->searchable()
                     ->alignCenter()
                     ->lineClamp(2),
                 Tables\Columns\IconColumn::make('is_visible')
+                    ->label('是否可见')
                     ->boolean()
                     ->alignCenter(),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label('开始日期')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label('结束日期')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('click_url')
+                    ->label('点击链接')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('创建时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('更新时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
+                    ->label('分类')
                     ->relationship('category', 'name')
                     ->searchable(),
                 Tables\Filters\TernaryFilter::make('is_visible')
-                    ->label('Visibility')
-                    ->trueLabel('Visible')
-                    ->falseLabel('Hidden')
+                    ->label('可见性')
+                    ->trueLabel('可见')
+                    ->falseLabel('隐藏')
                     ->nullable(),
                 Tables\Filters\Filter::make('start_date')
+                    ->label('开始日期')
                     ->form([
-                        Forms\Components\DatePicker::make('start_date'),
+                        Forms\Components\DatePicker::make('start_date')->label('开始日期'),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
                             ->when($data['start_date'] ?? null, fn($query, $date) => $query->whereDate('start_date', '>=', $date));
                     }),
                 Tables\Filters\Filter::make('end_date')
+                    ->label('结束日期')
                     ->form([
-                        Forms\Components\DatePicker::make('end_date'),
+                        Forms\Components\DatePicker::make('end_date')->label('结束日期'),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
@@ -199,9 +219,9 @@ class BannerResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('Detail'),
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Edit'),
-                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Delete'),
+                Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('详情'),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('编辑'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('删除'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

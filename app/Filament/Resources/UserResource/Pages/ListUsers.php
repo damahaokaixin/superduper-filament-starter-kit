@@ -34,13 +34,13 @@ class ListUsers extends ListRecords
     {
         $user = auth()->user();
         $tabs = [
-            null => Tab::make('All'),
-            'admin' => Tab::make()->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', 'admin')),
-            'author' => Tab::make()->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', 'author')),
+            null => Tab::make('全部'),
+            '管理员' => Tab::make('管理员')->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', '管理员')),
+            '编辑人员' => Tab::make('编辑人员')->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', '编辑人员')),
         ];
 
         if ($user->isSuperAdmin()) {
-            $tabs['superadmin'] = Tab::make()->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', config('filament-shield.super_admin.name')));
+            $tabs['超级管理员'] = Tab::make()->query(fn ($query) => $query->with('roles')->whereRelation('roles', 'name', '=', config('filament-shield.super_admin.name')));
         }
 
         return $tabs;

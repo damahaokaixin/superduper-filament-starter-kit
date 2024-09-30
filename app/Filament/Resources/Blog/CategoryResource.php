@@ -25,24 +25,30 @@ class CategoryResource extends Resource
     protected static ?int $navigationSort = -1;
     protected static ?string $navigationIcon = 'fluentui-stack-20';
 
+    protected static ?string $navigationLabel = '分类';
+    protected static ?string $modelLabel = '分类';
+    protected static ?string $pluralModelLabel = '分类';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('parent_id')
-                    ->label('Parent Category')
+                    ->label('上级分类')
                     ->options(Category::all()->pluck('name', 'id'))
                     ->searchable()
                     ->nullable()
                     ->columnSpan('full'),
 
                 Forms\Components\TextInput::make('name')
+                    ->label('分类名称')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
 
                 Forms\Components\TextInput::make('slug')
+                    ->label('别名')
                     ->disabled()
                     ->dehydrated()
                     ->required()
@@ -50,10 +56,11 @@ class CategoryResource extends Resource
                     ->unique(Category::class, 'slug', ignoreRecord: true),
 
                 Forms\Components\MarkdownEditor::make('description')
+                    ->label('描述')
                     ->columnSpan('full'),
 
                 Forms\Components\Toggle::make('is_active')
-                    ->label('Visible to customers.')
+                    ->label('对客户可见')
                     ->default(true),
             ]);
     }
@@ -63,19 +70,25 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('分类名称')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('parent.name')->label('Sub Category of')
+                Tables\Columns\TextColumn::make('parent.name')
+                    ->label('上级分类')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->label('别名')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_visible')
+                    ->label('可见性')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('创建时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('更新时间')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
@@ -84,9 +97,9 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('Detail'),
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Edit'),
-                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Delete'),
+                Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('详情'),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('编辑'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('删除'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -99,12 +112,13 @@ class CategoryResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('name'),
-                TextEntry::make('slug'),
-                TextEntry::make('description'),
+                TextEntry::make('name')->label('分类名称'),
+                TextEntry::make('slug')->label('别名'),
+                TextEntry::make('description')->label('描述'),
                 IconEntry::make('is_visible')
-                    ->label('Visibility'),
+                    ->label('可见性'),
                 TextEntry::make('updated_at')
+                    ->label('更新时间')
                     ->dateTime(),
             ])
             ->columns(1)
