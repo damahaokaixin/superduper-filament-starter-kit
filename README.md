@@ -40,8 +40,21 @@
 Create project with this composer command:
 
 ```bash
-composer create-project riodwanto/superduper-filament-starter-kit
+git clone git@github.com:damahaokaixin/superduper-filament-starter-kit.git
+cd superduper-filament-starter-kit
+# 切换分支到daya
+git checkout daya
+composer install
+pnpm install
+pnpm build
 ```
+
+
+```nginx
+email: superadmin@95jw.cn
+password: superadmin
+```
+
 
 Setup your env:
 
@@ -57,11 +70,7 @@ php artisan migrate
 php artisan db:seed
 ```
 
-<p align="center">or</p>
 
-```bash
-php artisan migrate:fresh --seed
-```
 
 Generate key:
 
@@ -84,7 +93,7 @@ php artisan serve
 Now you can access with `/admin` path, using:
 
 ```bash
-email: superadmin@starter-kit.com
+email: superadmin@95jw.cn
 password: superadmin
 ```
 
