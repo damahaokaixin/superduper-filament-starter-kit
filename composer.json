@@ -42,6 +42,7 @@
         "z3d0x/filament-logger": "^0.7.2"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.9.1",
         "laravel-lang/lang": "^15.12",
         "laravel/pint": "^1.0",
