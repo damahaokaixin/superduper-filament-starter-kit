@@ -10,8 +10,11 @@ class MenuResource extends BaseMenuResource
 
     protected static ?string $navigationIcon = 'fluentui-navigation-16';
 
+
+    protected static ?string $modelLabel = '菜单';
+    protected static ?string $pluralModelLabel = '菜单';
     public static function getNavigationGroup(): ?string
     {
-        return __("menu.nav_group.settings");
+        return "前台";
     }
 }

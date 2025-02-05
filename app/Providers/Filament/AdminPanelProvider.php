@@ -52,24 +52,25 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
                 Navigation\NavigationGroup::make()
-                    ->label('Content') // !! To-Do: lang
+                    ->label('内容') // !! To-Do: lang
                     ->collapsible(false),
                 Navigation\NavigationGroup::make()
-                    ->label(__('menu.nav_group.access'))
+                    ->label(__('使用权'))
                     ->collapsible(false),
                 Navigation\NavigationGroup::make()
-                    ->label(__('menu.nav_group.settings'))
+                    ->label('设置')
                     ->collapsed(),
                 Navigation\NavigationGroup::make()
-                    ->label(__('menu.nav_group.activities'))
+                    ->label('活动')
                     ->collapsed(),
             ])
             ->navigationItems([
                 Navigation\NavigationItem::make('Log Viewer') // !! To-Do: lang
+                    ->label(__('日志文件中心'))
                     ->visible(fn(): bool => auth()->user()->can('access_log_viewer'))
                     ->url(config('app.url').'/'.config('log-viewer.route_path'), shouldOpenInNewTab: true)
                     ->icon('fluentui-document-bullet-list-multiple-20-o')
-                    ->group(__('menu.nav_group.activities'))
+                    ->group('活动')
                     ->sort(99),
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
@@ -135,9 +136,9 @@ class AdminPanelProvider extends PanelProvider
                         \Datlechin\FilamentMenuBuilder\MenuPanel\StaticMenuPanel::make()
                             ->addMany([
                                 'Home' => url('/'),
-                                'Blog' => url('/blog'),
+                                '博客' => url('/blog'),
                             ])
-                            ->description('Default menus')
+                            ->description('默认菜单')
                             ->collapsed(true)
                             ->collapsible(true)
                             ->paginate(perPage: 5, condition: true)
