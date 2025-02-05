@@ -33,6 +33,12 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            //页面宽度
+            ->maxContentWidth(\Filament\Support\Enums\MaxWidth::Full)
+            //后台主菜单分组
+            ->navigationGroups([
+                '设置',
+            ])
             ->login(Login::class)
             ->passwordReset(RequestPasswordReset::class)
             ->emailVerification(EmailVerification::class)
