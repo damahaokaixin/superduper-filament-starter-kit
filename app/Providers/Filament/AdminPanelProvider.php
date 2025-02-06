@@ -12,6 +12,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -65,6 +66,10 @@ class AdminPanelProvider extends PanelProvider
                     ->collapsed(),
             ])
             ->navigationItems([
+                Navigation\NavigationItem::make('user-home')
+                    ->label("前台首页")
+                    ->url("/", true)
+                    ->icon('heroicon-o-cog-6-tooth'),
                 Navigation\NavigationItem::make('Log Viewer') // !! To-Do: lang
                     ->label(__('日志文件中心'))
                     ->visible(fn(): bool => auth()->user()->can('access_log_viewer'))

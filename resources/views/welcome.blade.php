@@ -129,5 +129,6 @@
                 </div>
             </div>
         </div>
+        <x-impersonate::banner/>
     </body>
 </html>
