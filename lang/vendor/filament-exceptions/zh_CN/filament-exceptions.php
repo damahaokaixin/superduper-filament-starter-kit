@@ -6,7 +6,7 @@ return [
         'model' => '异常',
         'model_plural' => '异常列表',
         'navigation' => '异常',
-        'navigation_group' => '活动',
+        'navigation_group' => '开发维护',
 
         'tabs' => [
             'exception' => '异常',

@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'nav.group' => '活动',
+    'nav.group' => '开发维护',
     'nav.log.label' => '活动日志',
     'nav.log.icon' => 'heroicon-o-clipboard-document-list',
     'resource.label.log' => '活动日志',

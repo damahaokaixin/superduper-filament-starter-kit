@@ -13,7 +13,7 @@ return [
         'exclude' => [
             //App\Filament\Resources\UserResource::class,
         ],
-        'navigation_group'=>'活动',
+        'navigation_group'=>'开发维护',
     ],
 
     'access' => [

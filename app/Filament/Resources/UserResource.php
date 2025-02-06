@@ -243,7 +243,7 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return "访问控制";
+        return "后台管理";
     }
 
     public static function doResendEmailVerification($settings = null, $user): void
