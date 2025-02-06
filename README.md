@@ -1,187 +1,112 @@
-<div align="center">
-  <img src="https://i.postimg.cc/4djrcJXx/logo.png" alt="Starter kit logo" width="200"/>
+# 九午软件filamentphp后台脚手架
 
-  [![Latest Version on Packagist](https://img.shields.io/packagist/v/riodwanto/superduper-filament-starter-kit.svg?style=flat-square)](https://packagist.org/packages/riodwanto/superduper-filament-starter-kit)
-  [![Laravel](https://github.com/riodwanto/superduper-filament-starter-kit/actions/workflows/laravel.yml/badge.svg)](https://github.com/riodwanto/superduper-filament-starter-kit/actions/workflows/laravel.yml)
-    [![Total Downloads](https://img.shields.io/packagist/dt/riodwanto/superduper-filament-starter-kit.svg?style=flat-square)](https://packagist.org/packages/riodwanto/superduper-filament-starter-kit)
-</div>
-
-<p align="center">
-    A starting point to create your next Filament 3 💡 app. With pre-installed plugins, pre-configured, and custom page. So you don't start all over again.
-</p>
-
-#### Features
-
-- 🛡 [Filament Shield](#plugins-used) for managing role access
-- 👨🏻‍🦱 customizable profile page from [Filament Breezy](#plugins-used)
-- 🌌 Managable media with [Filament Spatie Media](#plugins-used)
-- 🖼 Theme settings for changing panel color
-- 💌 Setting mail on the fly in Mail settings
-- 🅻 Lang Generator
-- Etc..
-
-#### Latest update
-
-##### Version: v1.15.xx
-
-- Add *opcodesio/log-viewer*
-- Add new plugins
-- Bugs fix & Improvement
-- Etc
-
-[Version Releases](https://github.com/riodwanto/superduper-filament-starter-kit/releases)
-
-*Sadly, Filament Multi-Tenancy will not be included in this starter kit. This repository will focus on improvements for non-multi-tenants, since many rooms should be improved.*
-
-<a href="https://buymeacoffee.com/riodewanto" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-#### Getting Started
-
-Create project with this composer command:
-
-```bash
-git clone git@github.com:damahaokaixin/superduper-filament-starter-kit.git
-cd superduper-filament-starter-kit
-# 切换分支到daya
-git checkout daya
-composer install
-pnpm install
-pnpm build
-```
-
-
-```nginx
-email: superadmin@95jw.cn
-password: superadmin
-```
-
-
-Setup your env:
-
-```bash
-cd superduper-filament-starter-kit
+## 1. 安装
+```sh
+git clone https://github.com/jiuwu-software/filament-admin-panel.git
+cd filament-admin-panel
 cp .env.example .env
-```
-
-Run migration & seeder:
-
-```bash
+# 修改.env文件的数据库配置, 域名, 软件名称, 软件版本, 软件版本号
+composer install
+php artisan key:generate
 php artisan migrate
 php artisan db:seed
+pnpm install
+pnpm run build
+```
+## 2. nginx配置
+```nginx
+location = /livewire/livewire.js {
+    expires off;
+    try_files $uri $uri/ /index.php?$query_string;
+}
+location = /livewire/livewire.min.js {
+    expires off;
+    try_files $uri $uri/ /index.php?$query_string;
+}
+location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
 ```
 
-
-
-Generate key:
-
-```bash
-php artisan key:generate
-```
-
-Run :
-
-```bash
-npm run dev
-OR
-npm run build
-```
-
-```bash
+## 3. 启动软件
+```sh
 php artisan serve
 ```
 
-Now you can access with `/admin` path, using:
+### 第三方软件包
 
-```bash
-email: superadmin@95jw.cn
-password: superadmin
-```
+#### 核心包
+- [Filament Admin Panel v3](https://github.com/filamentphp/filament) - 强大的 Laravel 管理面板框架
+- [Filament Shield](https://github.com/bezhansalleh/filament-shield) - Filament 的权限管理系统
+  ```bash
+  php artisan shield:install
+  php artisan shield:generate
+  ```
 
-#### Performance
+#### 认证相关
+- [Filament Breezy](https://github.com/jeffgreco13/filament-breezy) - 增强的用户认证功能
+  ```bash
+  php artisan breezy:install
+  ```
 
-*It's recommend to run below command as suggested in [Filament Documentation](https://filamentphp.com/docs/3.x/panels/installation#improving-filament-panel-performance) for improving panel perfomance.*
+#### 媒体管理
+- [Spatie Media Library](https://github.com/spatie/laravel-medialibrary) - 媒体文件管理
+  ```bash
+  php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="migrations"
+  php artisan migrate
+  ```
+- [Filament Media Manager](https://github.com/tomatophp/filament-media-manager) - 文件管理器
 
-```bash
-php artisan icons:cache
-```
+#### 系统工具
+- [Filament Exceptions](https://github.com/bezhansalleh/filament-exceptions) - 异常日志管理
+  ```bash
+  php artisan vendor:publish --tag="filament-exceptions-migrations"
+  php artisan migrate
+  ```
+- [Filament Logger](https://github.com/z3d0x/filament-logger) - 系统操作日志
+  ```bash
+  php artisan vendor:publish --tag="filament-logger-migrations"
+  php artisan migrate
+  ```
+- [Log Viewer](https://github.com/opcodesio/log-viewer) - 日志查看器
+  ```bash
+  php artisan vendor:publish --tag="log-viewer-config"
+  ```
 
-Please see this [Improving Filament panel performance](https://filamentphp.com/docs/3.x/panels/installation#improving-filament-panel-performance) documentation for further improvement
+#### 功能增强
+- [Filament Menu Builder](https://github.com/datlechin/filament-menu-builder) - 动态菜单构建器
+  ```bash
+  php artisan vendor:publish --tag="filament-menu-builder-migrations"
+  php artisan migrate
+  ```
+- [Filament Record Navigation](https://github.com/josespinal/filament-record-navigation) - 记录导航
+- [Filament ACE Editor](https://github.com/riodwanto/filament-ace-editor) - 代码编辑器组件
+- [Spatie Tags](https://github.com/spatie/laravel-tags) - 标签管理
+  ```bash
+  php artisan vendor:publish --provider="Spatie\Tags\TagsServiceProvider" --tag="tags-migrations"
+  php artisan migrate
+  ```
+- [Spatie Settings](https://github.com/spatie/laravel-settings) - 系统设置管理
+  ```bash
+  php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
+  php artisan migrate
+  ```
 
-#### Language Generator
+#### 开发工具
+- [Laravel Debugbar](https://github.com/barryvdh/laravel-debugbar) - 调试工具栏
+  ```bash
+  php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+  ```
+- [Laravel Lang](https://github.com/Laravel-Lang/lang) - 多语言支持
+  ```bash
+  php artisan lang:update
+  ```
 
-This project include lang generator.
+### 注意事项
+1. 安装完成后，请确保运行所有必要的数据库迁移命令
+2. 部分包可能需要额外的配置，请参考各自的官方文档
+3. 建议在开发环境下启用 Laravel Debugbar
+4. 使用 Filament Shield 生成权限时，建议先规划好权限结构
 
-```bash
-php artisan superduper:lang-translate [from] [to]
-```
 
-Generator will look up files inside folder `[from]`. Get all variables inside the file; create a file and translate using `translate.googleapis.com`.
 
-This is what the translation process looks like.
-
-```bash
-❯ php artisan superduper:lang-translate en fr es
-
- 🔔 Translate to 'fr'
- 3/3 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100% -- ✅
-
- 🔔 Translate to 'es'
- 1/3 [▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░]  33% -- 🔄 Processing: page.php
-```
-
-##### Usage example
-
-- Single output
-
-```bash
-php artisan superduper:lang-translate en fr
-```
-
-- Multiple output
-
-```bash
-php artisan superduper:lang-translate en es ar fr pt-PT pt-BR zh-CN zh-TW
-```
-
-###### If you are using json translation
-
-```bash
-php artisan superduper:lang-translate en fr --json
-```
-
-#### Plugins
-
-These are [Filament Plugins](https://filamentphp.com/plugins) use for this project.
-
-| **Plugin**                                                                                          | **Author**                                          |
-| :-------------------------------------------------------------------------------------------------- | :-------------------------------------------------- |
-| [Filament Spatie Media Library](https://github.com/filamentphp/spatie-laravel-media-library-plugin) | [Filament Official](https://github.com/filamentphp)   |
-| [Filament Spatie Settings](https://github.com/filamentphp/spatie-laravel-settings-plugin)           | [Filament Official](https://github.com/filamentphp)   |
-| [Filament Spatie Tags](https://github.com/filamentphp/spatie-laravel-tags-plugin)                   | [Filament Official](https://github.com/filamentphp)   |
-| [Shield](https://github.com/bezhanSalleh/filament-shield)                                           | [bezhansalleh](https://github.com/bezhansalleh)     |
-| [Exceptions](https://github.com/bezhansalleh/filament-exceptions)                                   | [bezhansalleh](https://github.com/bezhansalleh)     |
-| [Breezy](https://github.com/jeffgreco13/filament-breezy)                                            | [jeffgreco13](https://github.com/jeffgreco13)       |
-| [Logger](https://github.com/z3d0x/filament-logger)                                                  | [z3d0x](https://github.com/z3d0x)                   |
-| [Ace Code Editor](https://github.com/riodwanto/filament-ace-editor)                                 | [riodwanto](https://github.com/riodwanto)           |
-| [Filament Record Navigation Plugin](https://github.com/josespinal/filament-record-navigation)       | [josespinal](https://github.com/josespinal)         |
-| [Filament media manager](https://github.com/tomatophp/filament-media-manager)                       | [tomatophp](https://github.com/tomatophp)           |
-| [Filament Menu Builder](https://github.com/datlechin/filament-menu-builder)                         | [datlechin](https://github.com/datlechin)           |
-
-#### Plugins Recommendation
-
-Other recommendations for your starter, in my personal opinion:
-
-- [Rupadana - API Resources](https://filamentphp.com/plugins/rupadana-api-service) : Generate API for your Resources.
-- [Bezhan Salleh - Language Switch](https://filamentphp.com/plugins/bezhansalleh-language-switch) : Zero config Language Switcher plugin for Filament Panels.
-- [Kenepa - Resource Lock](https://filamentphp.com/plugins/kenepa-resource-lock) : Resource locking when other user begins editing a resource.
-- [Ralph J. Smit - Components](https://filamentphp.com/plugins/ralphjsmit-components) : A collection of handy components.
-- [Tapp Network - Laravel Auditing](https://filamentphp.com/plugins/tapp-network-laravel-auditing) : Resource locking when other user begins editing a resource.
-- [Shuvro Roy - Spatie Laravel Health](https://filamentphp.com/plugins/shuvroroy-spatie-laravel-health) : Health monitoring for Filament.
-
-<a href="https://buymeacoffee.com/riodewanto" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-### License
-
-Filament Starter is provided under the [MIT License](LICENSE.md).
-
-If you discover a bug, please [open an issue](https://github.com/riodwanto/superduper-filament-starter-kit/issues).
