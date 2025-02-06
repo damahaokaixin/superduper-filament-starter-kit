@@ -48,6 +48,10 @@ php artisan serve
   ```bash
   php artisan breezy:install
   ```
+- [Filament Impersonate](https://github.com/stechstudio/filament-impersonate) - 用户模拟登录
+  ```bash
+  php artisan vendor:publish --tag="filament-impersonate-config"
+  ```
 
 #### 媒体管理
 - [Spatie Media Library](https://github.com/spatie/laravel-medialibrary) - 媒体文件管理
@@ -72,6 +76,10 @@ php artisan serve
   ```bash
   php artisan vendor:publish --tag="log-viewer-config"
   ```
+- [Filament Spatie Health](https://github.com/shuvroroy/filament-spatie-laravel-health) - 系统健康检查
+  ```bash
+  php artisan vendor:publish --provider="Spatie\Health\HealthServiceProvider" --tag="health-config"
+  ```
 
 #### 功能增强
 - [Filament Menu Builder](https://github.com/datlechin/filament-menu-builder) - 动态菜单构建器
@@ -91,6 +99,11 @@ php artisan serve
   php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
   php artisan migrate
   ```
+- [Google Translate PHP](https://github.com/Stichoza/google-translate-php) - Google 翻译集成
+- [Blade FluentUI System Icons](https://github.com/codeat3/blade-fluentui-system-icons) - FluentUI 图标集成
+  ```bash
+  php artisan vendor:publish --tag=blade-fluentui-system-icons-config
+  ```
 
 #### 开发工具
 - [Laravel Debugbar](https://github.com/barryvdh/laravel-debugbar) - 调试工具栏
@@ -107,6 +120,9 @@ php artisan serve
 2. 部分包可能需要额外的配置，请参考各自的官方文档
 3. 建议在开发环境下启用 Laravel Debugbar
 4. 使用 Filament Shield 生成权限时，建议先规划好权限结构
+5. 使用 Filament Impersonate 时，请注意配置相应的中间件和权限
+6. 系统健康检查建议配置定时任务进行监控
+7. 使用 Google Translate 时需要注意 API 限制和配额
 
 
 
